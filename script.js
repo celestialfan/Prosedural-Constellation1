@@ -28,13 +28,16 @@ class star{
         console.log(this.pathlist);
     }
     display(){
+        this.id=starlist.indexOf(starlist.find(star=>star.name===this.name));
         for(let i=0; i<this.connections.length; i++){
             this.lines.push(document.createElementNS('http://www.w3.org/2000/svg', 'path'));
             gameboard.append(this.lines[i]);
             this.lines[i].setAttribute("d", `M${(this.x-cameraxposition)*zoom} ${(this.y-camerayposition)*zoom} L${(starlist[this.connections[i]].x-cameraxposition)*zoom} ${(starlist[this.connections[i]].y-camerayposition)*zoom} Z`);
             this.lines[i].setAttribute("stroke", "rgba(255, 255, 255, 0.5)");
             this.lines[i].setAttribute("stroke-width", zoom);
-            //starlist[this.connections[i]].connections.push();
+            if(starlist[this.connections[i]].connections.includes(this.id)==false){
+                starlist[this.connections[i]].connections.push(this.id);
+            }
         }
         if(this.type=="sun"){
             this.ele.append(this.pathlist[0]);
