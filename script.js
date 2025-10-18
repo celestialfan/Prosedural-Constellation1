@@ -123,57 +123,67 @@ let namestarts=["Kepler", "Ross", "TRAPPIST", "Wolf", "Gliese", "Messier",      
 let namesfortypes=[["sun"], ["sun"], ["sun"], ["sun"], ["sun"], ["nebula", "cluster", "nova"], ["nebula", "cluster", "nova"], ["nebula", "cluster", "nova"], ["nova"], ["nova", "nebula"], ["nebula"], ["nebula"], ["nebula"], ["nova"], ["nova"], ["cluster"], ["cluster"], ["cluster"], ["cluster"], ["wormhole"], ["wormhole"], ["wormhole"]]
 let clusterandnebulanamestarts=[];
 let nameends=[];
+let rx=1000;
+let ry=1000;
+let amounts=[200, 60, 40, 20, 10];
+let s=1.5;
+let linedrawing="exponent";
 nameends.length=namestarts.length;
 for (let i = 0; i < nameends.length; i++) {
     nameends[i]=0;
 }
-let clusternameends=[0, 0, 0];
-for (let i = 0; i < Math.random()*1000; i++) {
+for (let i = 0; i < amounts[0]; i++) {
     let rand=Math.floor(Math.random()*namestarts.length);
     while(namesfortypes[rand].includes("sun")==false){
         rand=Math.floor(Math.random()*namestarts.length);
     }
     nameends[rand]++;
-    starlist.push(new star(`${namestarts[rand]}-${nameends[rand]}`, Math.random()*2000-1000, Math.random()*2000-1000, "sun", []));
+    starlist.push(new star(`${namestarts[rand]}-${nameends[rand]}`, Math.random()*rx*2-rx, Math.random()*ry*2-ry, "sun", []));
 }
-for (let i = 0; i < Math.random()*40; i++) {
+for (let i = 0; i < amounts[1]; i++) {
     let rand=Math.floor(Math.random()*namestarts.length);
     while(namesfortypes[rand].includes("cluster")==false){
         rand=Math.floor(Math.random()*namestarts.length);
     }
     nameends[rand]++;
-    starlist.push(new star(`${namestarts[rand]}-${nameends[rand]}`, Math.random()*2000-1000, Math.random()*2000-1000, "cluster", []));
+    starlist.push(new star(`${namestarts[rand]}-${nameends[rand]}`, Math.random()*rx*2-rx, Math.random()*ry*2-ry, "cluster", []));
 }
-for (let i = 0; i < Math.random()*40; i++) {
+for (let i = 0; i < amounts[2]; i++) {
     let rand=Math.floor(Math.random()*namestarts.length);
     while(namesfortypes[rand].includes("nebula")==false){
         rand=Math.floor(Math.random()*namestarts.length);
     }
     nameends[rand]++;
-    starlist.push(new star(`${namestarts[rand]}-${nameends[rand]}`, Math.random()*2000-1000, Math.random()*2000-1000, "nebula", []));
+    starlist.push(new star(`${namestarts[rand]}-${nameends[rand]}`, Math.random()*rx*2-rx, Math.random()*ry*2-ry, "nebula", []));
 }
-for (let i = 0; i < Math.random()*10; i++) {
+for (let i = 0; i < amounts[3]; i++) {
     let rand=Math.floor(Math.random()*namestarts.length);
     while(namesfortypes[rand].includes("nova")==false){
         rand=Math.floor(Math.random()*namestarts.length);
     }
     nameends[rand]++;
-    starlist.push(new star(`${namestarts[rand]}-${nameends[rand]}`, Math.random()*2000-1000, Math.random()*2000-1000, "nova", []));
+    starlist.push(new star(`${namestarts[rand]}-${nameends[rand]}`, Math.random()*rx*2-rx, Math.random()*ry*2-ry, "nova", []));
 }
-for (let i = 0; i < Math.random()*10; i++) {
+for (let i = 0; i < amounts[4]; i++) {
     let rand=Math.floor(Math.random()*namestarts.length);
     while(namesfortypes[rand].includes("wormhole")==false){
         rand=Math.floor(Math.random()*namestarts.length);
     }
     nameends[rand]++;
-    starlist.push(new star(`${namestarts[rand]}-${nameends[rand]}*`, Math.random()*2000-1000, Math.random()*2000-1000, "wormhole", []));
+    starlist.push(new star(`${namestarts[rand]}-${nameends[rand]}*`, Math.random()*rx*2-rx, Math.random()*ry*2-ry, "wormhole", []));
 }
 for (let i = 0; i < starlist.length; i++) {
     for (let j = 0; j < starlist.length; j++) {
         let xdis=starlist[j].x-starlist[i].x;
         let ydis=starlist[j].y-starlist[i].y;
-        if(2**Math.random()*Math.sqrt(xdis**2+ydis**2)<200){
-            starlist[i].connections.push(j);
+        if(linedrawing=="sigmoid"){
+            if(1/(1+s**Math.sqrt(xdis**2+ydis**2))+Math.random()*0.5>0.5){
+                starlist[i].connections.push(j);
+            }
+        }else if(linedrawing=="exponent"){
+            if(s**Math.random()*Math.sqrt(xdis**2+ydis**2)<100){
+                starlist[i].connections.push(j);
+            }
         }
     }
 }
